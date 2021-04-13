@@ -33,12 +33,48 @@ const initialDb = [
 
 export const CrudApp = () => {
   const [db, setDb] = useState(initialDb);
+  const [dataToEdit, setDataToEdit] = useState(null);
+
+  const createData = (data) => {
+    console.log(data);
+    data.id = Date.now(); //Generador id aleatorio
+    console.log(data);
+    setDb([...db, data]);
+  };
+
+  const updateData = (data) => {
+    let newData = db.map((el) => (el.id === data.id ? data : el));
+    setDb(newData);
+  };
+
+  const deleteData = (id) => {
+    let isDelete = window.confirm(
+      `¿Seguro deseas eliminar el registro con id : '${id}' ? `
+    );
+
+    if (isDelete) {
+      let newData = db.filter((el) => el.id !== id);
+      setDb(newData);
+    } else {
+      return;
+    }
+  };
+
   return (
     <div>
       <h2>C ̮͚̘r̩͍̮̘͔ ̰͉̭̦̙̘̬͜u͚̼̺̞͡ ̠̣̝̬̮̜͢d̪ ̣̙̩͕̳̳̝A̮̥͇̫ ͏̥̗p̝̪̬̦ p̶̳ </h2>
 
-      <CrudForm />
-      <CrudTable data={db} />
+      <CrudForm
+        createData={createData}
+        updateData={updateData}
+        dataToEdit={dataToEdit}
+        setDataToEdit={setDataToEdit}
+      />
+      <CrudTable
+        data={db}
+        setDataToEdit={setDataToEdit}
+        deleteData={deleteData}
+      />
     </div>
   );
 };

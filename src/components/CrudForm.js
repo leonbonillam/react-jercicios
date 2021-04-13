@@ -6,17 +6,48 @@ const initialForm = {
   id: null,
 };
 
-const CrudForm = () => {
-  const [form, setForm] = useState({ initialForm });
-  const handleChange = (e) => {};
+const CrudForm = ({ createData, updateData, dataToEdit, setDataToEdit }) => {
+  const [form, setForm] = useState(initialForm);
 
-  const handleSubmit = (e) => {};
+  useEffect(() => {
+    if (dataToEdit) {
+      setForm(dataToEdit);
+    } else {
+      setForm(initialForm);
+    }
+  }, [dataToEdit]);
 
-  const handleReset = (e) => {};
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.book) {
+      alert("Datos incompletos");
+      return;
+    }
+
+    if (form.id === null) {
+      createData(form);
+    } else {
+      updateData(form);
+    }
+    handleReset();
+  };
+
+  const handleReset = (e) => {
+    setForm(initialForm);
+    setDataToEdit(null);
+  };
 
   return (
     <div>
-      <h3>Agregar</h3>
+      <h3>{dataToEdit ? "Editar" : "Agregar"}</h3>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
